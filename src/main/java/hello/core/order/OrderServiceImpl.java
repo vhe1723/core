@@ -2,14 +2,27 @@ package hello.core.order;
 
 import hello.core.discount.DiscountPolicy;
 import hello.core.discount.FixDiscountPolicy;
+import hello.core.discount.RateDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+
+    /***************************************************************************************/
+//    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+    // 인터페이스에서 구현체만 바꿔주면 된다.  => DIP를 준수하는거 같지만 구현 클래스에도 의존하고있는 형태가되어 위반된다.
+    //DIP를 위반하는순간 OrderServiceImpl도 변경해야한다.(지금처럼)  => OCP 위반된다.
+//    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
+    /***************************************************************************************/
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;      //해결방법 (이렇게되면 DIP를 지키면서 코드 활용가능)
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;   //AppConfig(외부)생성자를 통해서 주입받는다.
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
