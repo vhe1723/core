@@ -5,6 +5,8 @@ import hello.core.member.MemberService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class SingletonTest {
 
@@ -33,7 +35,26 @@ public class SingletonTest {
         SingletonService singletonService1 = SingletonService.getInstance();
         SingletonService singletonService2 = SingletonService.getInstance();
 
-        System.out.println("singletonService1 = " + singletonService1);
+        System.out.println("singleto nService1 = " + singletonService1);
         System.out.println("singletonService2 = " + singletonService1);
+    }
+
+    @Test
+    @DisplayName("스프링 컨테이너와 싱글톤")
+    void springContainer() {
+
+//        AppConfig appConfig = new AppConfig();
+        ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        MemberService memberService1 = ac.getBean("memberService", MemberService.class);
+        MemberService memberService2 = ac.getBean("memberService", MemberService.class);
+
+        //참조값이 다른 것을 확인
+        //같은 객체를 생성해도 계속해서 메모리가 만들어진다. => 싱글톤으로 해결
+        System.out.println("memberService2 = " + memberService1);   //memberService1 = hello.core.member.MemberServiceImpl@23348b5d
+        System.out.println("memberService2 = " + memberService2);   //memberService2 = hello.core.member.MemberServiceImpl@70325e14
+
+        Assertions.assertThat(memberService1).isSameAs(memberService2);
+
     }
 }

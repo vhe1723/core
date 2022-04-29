@@ -1,6 +1,7 @@
 package hello.core.member;
 
 import hello.core.AppConfig;
+import hello.core.singleton.SingletonService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,5 +27,8 @@ public class MemberServiceTest {
 
         //then
         Assertions.assertThat(member).isEqualTo(findMember);
+
     }
+    
+
 }

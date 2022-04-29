@@ -6,7 +6,12 @@ import hello.core.discount.RateDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
 
@@ -16,9 +21,26 @@ public class OrderServiceImpl implements OrderService {
     //DIP를 위반하는순간 OrderServiceImpl도 변경해야한다.(지금처럼)  => OCP 위반된다.
 //    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
     /***************************************************************************************/
-    private final MemberRepository memberRepository;
-    private final DiscountPolicy discountPolicy;      //해결방법 (이렇게되면 DIP를 지키면서 코드 활용가능)
+    //final 키워드의 경우도 생성자 주입의 이점중 하나이다. 나머지는 생성자 호출시점 뒤이기 때문에 final을 사용할 수 없음.
 
+//    @Autowired
+    private final MemberRepository memberRepository;
+//    @Autowired
+    private final DiscountPolicy discountPolicy;
+
+//    //setter주입
+//    @Autowired
+//    public void setMemberRepository(MemberRepository memberRepository) {
+//        this.memberRepository = memberRepository;
+//    }
+//
+//    @Autowired
+//    public void setDiscountPolicy(DiscountPolicy discountPolicy) {
+//        this.discountPolicy = discountPolicy;
+//    }
+//    @Autowired  //생성자 주입
+
+//     밑의 코드를 롬복의 @RequiredArgsConstructor로 대체가능
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;   //AppConfig(외부)생성자를 통해서 주입받는다.
         this.discountPolicy = discountPolicy;
@@ -32,5 +54,10 @@ public class OrderServiceImpl implements OrderService {
         int discountPrice = discountPolicy.discount(member, itemPrice);
 
         return new Order(memberId, itemName, itemPrice, discountPrice);
+    }
+
+    //테스트
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
     }
 }

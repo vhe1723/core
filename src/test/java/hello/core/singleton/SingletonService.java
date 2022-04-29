@@ -1,5 +1,7 @@
 package hello.core.singleton;
 
+import org.junit.jupiter.api.Test;
+
 public class SingletonService {
 
     //static으로 선언하면 클래스레벨로 올라가서 단 하나만 존재하게된다.
