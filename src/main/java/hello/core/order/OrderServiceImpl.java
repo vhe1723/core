@@ -1,5 +1,6 @@
 package hello.core.order;
 
+import hello.core.annotation.MainDiscountPolicy;
 import hello.core.discount.DiscountPolicy;
 import hello.core.discount.FixDiscountPolicy;
 import hello.core.discount.RateDiscountPolicy;
@@ -8,10 +9,11 @@ import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
 
@@ -41,9 +43,11 @@ public class OrderServiceImpl implements OrderService {
 //    @Autowired  //생성자 주입
 
 //     밑의 코드를 롬복의 @RequiredArgsConstructor로 대체가능
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-        this.memberRepository = memberRepository;   //AppConfig(외부)생성자를 통해서 주입받는다.
-        this.discountPolicy = discountPolicy;
+    @Autowired
+    public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;   //DiscountPolicy의 조회되는 빈은 2개
+                                                    // => DiscountPolicy rateDiscountPolicy 이런식으로 조회할 빈을 선택할 수 있다.
     }
 
     @Override
